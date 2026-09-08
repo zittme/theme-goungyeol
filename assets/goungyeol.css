@@ -1,0 +1,243 @@
+@charset "utf-8";
+
+/* 코어에 번들된 Pretendard 를 쓴다. 외부 CDN 을 참조하지 않는다.
+ * 경로는 웹 루트 기준이 아니라 이 파일 위치 기준이다: themes/goungyeol/assets -> 루트 */
+@font-face {
+	font-family: 'Pretendard';
+	src: url('../../../common/fonts/PretendardVariable.woff2') format('woff2-variations');
+	font-weight: 45 920;
+	font-style: normal;
+	font-display: swap;
+}
+
+:root {
+
+	--hr-brand: #c4275f;
+	--hr-brand-dark: #a11548;
+	--hr-brand-light: #e9799f;
+	--hr-brand-soft: rgba(196, 39, 95, .07);
+	--hr-ink: #171214;
+	--hr-ink-sub: #5c5257;
+	--hr-muted: #948a8e;
+	--hr-line: #eae3e5;
+	--hr-line-soft: #f4eff0;
+	--hr-bg: #ffffff;
+	--hr-surface: #fbf7f8;
+	--hr-danger: #e23a47;
+	--hr-success: #1f8a5f;
+
+	--hr-btn-face: #ffffff;
+	--hr-btn-line: #ded4d7;
+	--hr-btn-strong: var(--hr-ink);
+	--hr-btn-strong-hover: var(--hr-brand);
+
+	/* 상품 사진이 주인공인 편집숍 화면이다. 카드·버튼·입력칸·배지 어디에도 둥근 모서리를 두지 않는다 */
+	--hr-radius: 0;
+	--hr-radius-sm: 0;
+	--hr-radius-btn: 0;
+	--hr-radius-pill: 0;
+	--hr-shadow: 0 18px 40px -26px rgba(23, 18, 20, .32);
+
+	--hr-w: 1280px;
+	--hr-font: Pretendard, 'Pretendard Variable', -apple-system, BlinkMacSystemFont,
+		'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+}
+
+[data-theme="dark"] {
+	--hr-brand-soft: rgba(240, 125, 165, .15);
+	--hr-ink: #f0e9ec;
+	--hr-ink-sub: #bcafb4;
+	--hr-muted: #8d8286;
+	--hr-line: #322a2e;
+	--hr-line-soft: #262023;
+	--hr-bg: #141013;
+	--hr-surface: #1d171a;
+	--hr-btn-face: #241d21;
+	--hr-btn-line: #3c3238;
+	--hr-btn-strong: #f0e9ec;
+	--hr-btn-strong-hover: var(--hr-brand);
+	--hr-shadow: 0 18px 40px -24px rgba(0, 0, 0, .65);
+	--hr-brand: #f07da5;
+	--hr-brand-dark: #d9628c;
+	--hr-brand-light: #f8a9c4;
+	--hr-danger: #ff6b73;
+}
+
+.hr {
+	font-family: var(--hr-font);
+	color: var(--hr-ink);
+	font-size: 16px;
+	line-height: 1.65;
+	word-break: keep-all;
+	overflow-wrap: break-word;
+}
+
+/* 스크롤바. 파이어폭스는 두 값만 받고, 나머지는 아래 webkit 규칙이 맡는다.
+ * 점 색은 layout.html 이 :root 에 심는다. 감싸는 요소에만 있으면 창 스크롤바까지 닿지 않는다 */
+html, .hr *, .hr-mobile * {
+	scrollbar-width: thin;
+	scrollbar-color: color-mix(in srgb, var(--hr-brand) 55%, transparent) transparent;
+}
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+	border: 3px solid transparent;
+	border-radius: 0;
+	background-clip: padding-box;
+	background-color: var(--hr-brand);
+}
+::-webkit-scrollbar-thumb:hover { border-width: 2px; }
+::-webkit-scrollbar-corner { background: transparent; }
+@supports (color: color-mix(in srgb, red 50%, blue)) {
+	::-webkit-scrollbar-thumb { background-color: color-mix(in srgb, var(--hr-brand) 55%, transparent); }
+	::-webkit-scrollbar-thumb:hover { background-color: var(--hr-brand); }
+}
+.hr a { color: inherit; text-decoration: none; }
+.hr img { max-width: 100%; height: auto; }
+.hr ul, .hr ol { list-style: none; margin: 0; padding: 0; }
+.hr h1, .hr h2, .hr h3, .hr h4 { margin: 0; font-weight: 800; letter-spacing: -.02em; line-height: 1.35; }
+
+
+.hr-inner { width: 100%; max-width: var(--hr-w); margin: 0 auto; padding: 0; box-sizing: border-box; }
+@media (max-width: 1240px) {
+	.hr-inner { padding: 0 clamp(14px, 3vw, 24px); }
+}
+
+.hr-btn,
+.hr a.hr-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	padding: 8px 15px;
+	border: 1px solid var(--hr-btn-line);
+	border-radius: 0;
+	background: var(--hr-btn-face);
+	color: var(--hr-ink);
+	font: inherit;
+	font-size: 13.5px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: border-color .14s, background-color .14s, color .14s;
+}
+.hr-btn:hover { border-color: var(--hr-muted); background-color: var(--hr-surface); }
+.hr-btn-primary,
+.hr a.hr-btn-primary {
+	background: var(--hr-btn-strong);
+	border-color: var(--hr-btn-strong);
+	color: #fff;
+}
+.hr-btn-primary:hover {
+	background: var(--hr-btn-strong-hover);
+	border-color: var(--hr-btn-strong-hover);
+	color: #fff;
+}
+.hr-btn-sm { padding: 6px 12px; font-size: 12.5px; }
+.hr-btn-lg { padding: 12px 24px; font-size: 15px; }
+.hr-btn:disabled, .hr-btn.is-disabled { opacity: .55; pointer-events: none; }
+
+.hr-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 6px 12px;
+	border: 1px solid var(--hr-line);
+	border-radius: 0;
+	background: var(--hr-bg);
+	color: var(--hr-ink-sub);
+	font-size: 13px;
+	font-weight: 600;
+}
+.hr-chip:hover { border-color: var(--hr-brand); color: var(--hr-brand); }
+.hr-chip.is-on { background: var(--hr-brand); border-color: var(--hr-brand); color: #fff; }
+.hr-badge {
+	display: inline-block;
+	padding: 3px 9px;
+	border-radius: 0;
+	background: var(--hr-brand-soft);
+	color: var(--hr-brand);
+	font-size: 11.5px;
+	font-weight: 800;
+}
+.hr-badge.is-muted { background: var(--hr-surface); color: var(--hr-muted); }
+.hr-badge.is-danger { background: rgba(229, 72, 77, .1); color: var(--hr-danger); }
+.hr-badge.is-success { background: rgba(15, 157, 99, .1); color: var(--hr-success); }
+
+.hr-card {
+	border: 1px solid var(--hr-line);
+	border-radius: 0;
+	background: var(--hr-bg);
+	padding: 24px;
+}
+.hr-card-hover { transition: transform .16s, border-color .16s, box-shadow .16s; }
+.hr-card-hover:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--hr-brand) 55%, transparent); box-shadow: var(--hr-shadow); }
+
+.hr-field { display: flex; flex-direction: column; gap: 7px; margin-bottom: 18px; }
+.hr-field > label { font-size: 14px; font-weight: 700; }
+.hr-field > label em { color: var(--hr-danger); font-style: normal; }
+.hr input[type="text"], .hr input[type="password"], .hr input[type="email"],
+.hr input[type="search"], .hr input[type="tel"], .hr input[type="number"],
+.hr input[type="date"], .hr select, .hr textarea {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 12px 14px;
+	border: 1px solid var(--hr-line);
+	border-radius: 0;
+	background: var(--hr-bg);
+	color: var(--hr-ink);
+	font: inherit;
+	font-size: 15px;
+	outline: none;
+	transition: border-color .14s, box-shadow .14s;
+}
+.hr input:focus, .hr select:focus, .hr textarea:focus {
+	border-color: var(--hr-brand);
+	box-shadow: 0 0 0 3px var(--hr-brand-soft);
+}
+.hr textarea { resize: vertical; line-height: 1.7; }
+.hr-field-hint { margin: 0; font-size: 12.5px; color: var(--hr-muted); }
+.hr-check { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+
+.hr-table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+.hr-table th, .hr-table td { padding: 15px 12px; text-align: left; border-bottom: 1px solid var(--hr-line-soft); }
+.hr-table thead th {
+	border-bottom: 1px solid var(--hr-line);
+	color: var(--hr-muted);
+	font-size: 13px;
+	font-weight: 700;
+	white-space: nowrap;
+}
+.hr-table tbody tr:hover { background: var(--hr-surface); }
+
+.hr-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin: 0 0 24px; }
+.hr-eyebrow { display: block; font-size: 11.5px; font-weight: 800; letter-spacing: .14em; color: var(--hr-brand); text-transform: uppercase; }
+.hr-title { margin: 6px 0 0; font-size: clamp(24px, 3.2vw, 32px); }
+.hr-desc { margin: 8px 0 0; color: var(--hr-ink-sub); font-size: 15px; }
+
+.hr-pages { display: flex; justify-content: center; align-items: center; gap: 2px; margin: 26px 0 0; }
+.hr-pages a, .hr-pages strong {
+	width: 28px;
+	height: 28px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	border-radius: 0;
+	font-size: 13px;
+	font-weight: 500;
+	color: var(--hr-ink-sub);
+}
+.hr-pages a:hover { background: var(--hr-surface); color: var(--hr-brand); }
+.hr-pages strong { color: var(--hr-brand); font-weight: 800; }
+
+.hr-empty { padding: 70px 20px; text-align: center; color: var(--hr-muted); }
+
+.hr-notice { margin: 0 0 16px; padding: 14px 18px; border-radius: 0; background: var(--hr-surface); color: var(--hr-ink-sub); font-size: 14px; }
+.hr-notice.is-error { background: rgba(229, 72, 77, .08); color: var(--hr-danger); }
+.hr-notice.is-success { background: rgba(15, 157, 99, .08); color: var(--hr-success); }
+
+@media (max-width: 640px) {
+	.hr { font-size: 15px; }
+	.hr-card { padding: 18px 16px; }
+	.hr-table th, .hr-table td { padding: 12px 8px; }
+}

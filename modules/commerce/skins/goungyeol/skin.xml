@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<skin version="0.2">
+	<title xml:lang="ko">고운결</title>
+	<title xml:lang="en">Goungyeol</title>
+	<description xml:lang="ko">고운결 테마의 커머스 스킨입니다. 뷰티 편집숍 방식으로 상품 카드에 브랜드명과 상품명을 나눠 적고, 별점·리뷰 수·세일 배지를 함께 보여 줍니다. 할인 표기에는 붉은색을 씁니다.</description>
+	<description xml:lang="en">Commerce skin of the Goungyeol theme. Product cards split brand and product name in beauty-retail fashion and carry ratings, review counts and sale badges. Discounts are marked in red.</description>
+	<version>1.0.0</version>
+	<date>2026-09-05</date>
+	<author email_address="zittme-contact@zzan.me" link="https://zitt.me">
+		<name xml:lang="ko">ZZAN Studio</name>
+		<name xml:lang="en">ZZAN Studio</name>
+	</author>
+	<responsive>true</responsive>
+</skin>
