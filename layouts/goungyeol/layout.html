@@ -81,9 +81,13 @@ if (!function_exists('zm_repeat_items'))
 			{
 				continue;
 			}
+			if ((!empty($row['_start_date']) && date('YmdHis') < $row['_start_date']) || (!empty($row['_end_date']) && date('YmdHis') > $row['_end_date']))
+			{
+				continue;
+			}
 			$items[] = $row;
 		}
-		if (count($items) || $slots < 1 || !count($props))
+		if (count($items) || !empty($raw) || $slots < 1 || !count($props))
 		{
 			return $items;
 		}
@@ -193,7 +197,6 @@ $hr_footer_info = array_values(array_filter(array_map('trim', explode("\n", (str
 
 	@include('_footer')
 
-	{{-- 모바일 하단 탭바 (860px 이하에서만 표시) --}}
 	@php $hr_tab_shop = $ss_shop_mid ?? ''; @endphp
 	<nav class="ss-tabbar" aria-label="{{ $lang->hr_main_menu }}">
 		<a href="{{ getUrl('') }}">
@@ -221,7 +224,6 @@ $hr_footer_info = array_values(array_filter(array_map('trim', explode("\n", (str
 		</a>
 	</nav>
 
-	{{-- 하단 탭바용 바텀시트: 상점 카테고리 / 상점 검색 --}}
 	<div class="ss-sheet-dim" id="ss_sheet_dim" hidden></div>
 
 	<div class="ss-sheet" id="ss_sheet_cats" role="dialog" aria-modal="true" aria-label="{{ $lang->ss_all_categories }}" hidden>

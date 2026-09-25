@@ -7,7 +7,6 @@
 	font-style: normal;
 	font-display: swap;
 }
-/* 고운결 테마 시스템 메시지 스킨 - 레이아웃 밖에서도 스스로 완결되게 스타일링한다 */
 :root {
 	--zm-brand: #c4275f;
 	--zm-brand-hover: #a11548;

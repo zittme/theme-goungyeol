@@ -60,6 +60,8 @@ $hr_lang_sep = strpos($hr_lang_uri, '?') === false ? '?' : '&';
 			<a href="{{ getUrl('', 'module', 'admin') }}" target="_blank">{{ $lang->hr_admin }}</a>
 			<a href="{{ getUrl('', 'module', 'commerce', 'act', 'dispCommerceConsole') }}" target="_blank" class="ss-topbar-shopadmin">{{ $lang->hr_shop_admin }}</a>
 			<a href="{{ getUrl('', 'module', 'admin', 'act', 'dispZittme_payAdminConfig') }}" target="_blank" class="ss-topbar-payadmin">{{ $lang->hr_pay_admin }}</a>
+			@elseif (class_exists('\Zittme\Modules\Commerce\Models\Staff') && \Zittme\Modules\Commerce\Models\Staff::isStaff())
+			<a href="{{ getUrl('', 'module', 'commerce', 'act', 'dispCommerceConsole') }}" target="_blank" class="ss-topbar-shopadmin">{{ $lang->hr_shop_admin }}</a>
 			@endif
 			<a href="{{ getUrl('', 'act', 'dispMemberLogout') }}">{{ $lang->hr_logout }}</a>
 			@else
@@ -116,7 +118,6 @@ $hr_lang_sep = strpos($hr_lang_uri, '?') === false ? '?' : '&';
 				<button type="submit" aria-label="{{ $lang->hr_search }}">
 					<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 1 0 4.6 13.4l4.2 4.3 1.5-1.5-4.3-4.2A7.5 7.5 0 0 0 10.5 3zm0 2a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11z"/></svg>
 				</button>
-				{{-- 모바일에서 검색이 헤더를 덮은 상태를 되돌린다. 좁은 화면에서만 보인다 --}}
 				<button type="button" class="ss-search-close" data-ss-search-close aria-label="{{ $lang->ss_search_close }}">
 					<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7l1.4-1.4 6.3 6.3 6.3-6.3z"/></svg>
 				</button>
@@ -125,7 +126,6 @@ $hr_lang_sep = strpos($hr_lang_uri, '?') === false ? '?' : '&';
 
 			<div class="ss-icons">
 				@if ($hr->use_search !== 'N')
-				{{-- 좁은 화면에서는 검색창 대신 이 버튼만 두고, 누르면 헤더가 검색창으로 바뀐다 --}}
 				<button type="button" class="ss-icon ss-search-btn" id="ss_search_btn" aria-label="{{ $lang->hr_search }}" aria-expanded="false">
 					<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 1 0 4.6 13.4l4.2 4.3 1.5-1.5-4.3-4.2A7.5 7.5 0 0 0 10.5 3zm0 2a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11z"/></svg>
 					<span class="ss-icon-label">{{ $lang->hr_search }}</span>
@@ -348,6 +348,11 @@ $hr_lang_sep = strpos($hr_lang_uri, '?') === false ? '?' : '&';
 			<a class="hr-mobile-tool" href="{{ getUrl('', 'module', 'admin', 'act', 'dispZittme_payAdminConfig') }}" target="_blank">
 				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6zm2 3v2h14V9H5zm0 4v5h14v-5H5zm2 2h5v1.6H7V15z"/></svg>
 				<span>{{ $lang->hr_pay_admin }}</span>
+			</a>
+			@elseif (class_exists('\Zittme\Modules\Commerce\Models\Staff') && \Zittme\Modules\Commerce\Models\Staff::isStaff())
+			<a class="hr-mobile-tool" href="{{ getUrl('', 'module', 'commerce', 'act', 'dispCommerceConsole') }}" target="_blank">
+				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16l-1.5 9.5a2 2 0 0 1-2 1.7H7.6a2 2 0 0 1-2-1.6L4 4zm2.3 2 1.2 7.2h9.1L17.7 6H6.3zM8 17.5A1.75 1.75 0 1 1 8 21a1.75 1.75 0 0 1 0-3.5zm8 0a1.75 1.75 0 1 1 0 3.5 1.75 1.75 0 0 1 0-3.5z"/></svg>
+				<span>{{ $lang->hr_shop_admin }}</span>
 			</a>
 			@endif
 

@@ -41,7 +41,6 @@ $lang->ss_g_genuine_text = 'Sourced through official brand channels';
 $lang->ss_g_return = 'Returns';
 $lang->ss_g_return_text = 'Within 7 days of delivery';
 
-// Theme built-in front page
 $lang->ssh_sec_recommend = 'Recommended';
 $lang->ssh_sec_new = 'New arrivals';
 $lang->ssh_sec_sale = 'On sale';

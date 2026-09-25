@@ -1,7 +1,6 @@
 
 
 .zpay {
-	/* 레이아웃(goungyeol) 토큰을 따르고, 레이아웃 밖에서는 폴백을 쓴다 */
 	--zpay-point: var(--hr-brand, #c4275f);
 	/* color-mix 미지원 브라우저용 고정값 — 지원되면 아래 @supports 가 덮는다 */
 	--zpay-point-dark: #a11548;

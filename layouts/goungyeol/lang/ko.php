@@ -41,7 +41,6 @@ $lang->ss_g_genuine_text = '브랜드에서 정식으로 들여온 상품입니�
 $lang->ss_g_return = '교환·반품';
 $lang->ss_g_return_text = '수령 후 7일 이내 신청할 수 있습니다';
 
-// 테마 내장 메인페이지
 $lang->ssh_sec_recommend = '추천 상품';
 $lang->ssh_sec_new = '신상품';
 $lang->ssh_sec_sale = '할인 상품';

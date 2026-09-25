@@ -1,5 +1,4 @@
 @version(2)
-{{-- 대문 히어로. 화면 좌우를 가득 채우고 문구는 아래쪽에 둔다. --}}
 @php
 $hr_visuals = array_map(function($hr_nv) { return is_array($hr_nv) ? $hr_nv : (array)$hr_nv; }, is_array($hr_visuals ?? null) ? $hr_visuals : []);
 if (!function_exists('hr_visual_text'))

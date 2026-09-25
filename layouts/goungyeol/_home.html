@@ -1,6 +1,4 @@
 @version(2)
-{{-- 테마 내장 메인페이지 — 대문(메인 형태)에서 상품·게시글·카테고리 섹션을 렌더링한다. --}}
-{{-- 레이아웃 설정의 "메인 구성" 반복 필드로 조립하고, 비워두면 기본 구성을 쓴다. --}}
 @php
 // 커머스 스킨 공용 헬퍼(가격 표기)는 커머스 컨트롤러가 로드한다.
 // 대문은 다른 모듈이므로 여기서 직접 불러 둔다. 커머스 미설치면 그냥 넘어간다.
@@ -10,6 +8,17 @@ if (!function_exists('shop_item_price'))
 	if (is_file($hr_helper_file)) { require_once $hr_helper_file; }
 }
 
+if (!function_exists('hr_home_now'))
+{
+	// 카드에 찍을 현재가: 타임세일가 → 회원 등급가 → 판매가 (타임세일 중에는 등급 할인이 겹치지 않는다)
+	function hr_home_now($hrh_it)
+	{
+		$hrh_g = (int)($hrh_it->grade_price ?? 0);
+		$hrh_t = (int)($hrh_it->ts_price ?? 0);
+		if ($hrh_t > 0) { return $hrh_t; }
+		return $hrh_g > 0 ? $hrh_g : (int)($hrh_it->sale_price ?? 0);
+	}
+}
 if (!function_exists('hr_home_price'))
 {
 	// 상품 가격 한 줄 표기: 헬퍼가 있으면 통화 규칙을 따르고, 없으면 숫자만 찍는다
@@ -133,6 +142,13 @@ foreach ((is_array($hr_visuals ?? null) ? $hr_visuals : []) as $hrh_bv)
 // 상품 풀 — 상품 섹션이 하나라도 있으면 한 번만 조회
 $hrh_pool = [];
 $hrh_need_items = false;
+// 등급 할인이 걸린 회원이면 커머스 목록과 같은 규칙으로 등급가를 붙인다
+$hrh_grade_dc = null;
+$hrh_logged = \Context::get('logged_info');
+if ((int)($hrh_logged->member_srl ?? 0) > 0 && class_exists('\\Zittme\\Modules\\Commerce\\Models\\Grade'))
+{
+	$hrh_grade_dc = \Zittme\Modules\Commerce\Models\Grade::discountFor((int)$hrh_logged->member_srl);
+}
 foreach ($hrh_sections as $hrh_sec)
 {
 	if (strpos($hrh_sec['stype'], 'items_') === 0 || $hrh_sec['stype'] === 'daily' || $hrh_sec['stype'] === 'ranking') { $hrh_need_items = true; }
@@ -155,6 +171,21 @@ if ($hrh_need_items && $hrh_shop_mid !== '')
 			if (!empty($hrh_it->sale_start) && $hrh_now < $hrh_it->sale_start) { continue; }
 			if (!empty($hrh_it->sale_end) && $hrh_now > $hrh_it->sale_end) { continue; }
 			$hrh_it->item_name = \Context::replaceUserLang((string)$hrh_it->item_name);
+			$hrh_it->grade_price = 0;
+			$hrh_it->ts_price = 0;
+			if (class_exists('\\Zittme\\Modules\\Commerce\\Models\\Timesale') && method_exists('\\Zittme\\Modules\\Commerce\\Models\\Timesale', 'forItem'))
+			{
+				$hrh_tsr = \Zittme\Modules\Commerce\Models\Timesale::forItem($hrh_it);
+				if ($hrh_tsr) { $hrh_it->ts_price = (int)$hrh_tsr->price; }
+			}
+			if ($hrh_grade_dc && ($hrh_it->grade_discount ?? 'Y') !== 'N')
+			{
+				$hrh_gp = (int)($hrh_it->price ?? 0);
+				$hrh_gs = (int)($hrh_it->sale_price ?? 0);
+				$hrh_ge = ($hrh_gs > 0 && $hrh_gs < $hrh_gp) ? $hrh_gs : $hrh_gp;
+				$hrh_gv = \Zittme\Modules\Commerce\Models\Grade::applyDiscount($hrh_ge, $hrh_grade_dc);
+				$hrh_it->grade_price = $hrh_gv < $hrh_ge ? $hrh_gv : 0;
+			}
 			$hrh_pool[] = $hrh_it;
 		}
 	}
@@ -269,7 +300,6 @@ if (!function_exists('hr_home_posts'))
 		}
 	}
 	@endphp
-	{{-- 카테고리 인덱스. 동그란 아이콘 타일 대신 글자만 세워 상품 사진과 경쟁하지 않게 한다 --}}
 	<nav class="ssh-catindex" aria-label="{{ $lang->ssh_sec_categories }}">
 		@if ($hrh_shop_mid !== '')
 		<a class="ssh-catindex-all" href="{{ getUrl('', 'mid', $hrh_shop_mid, 'v', 'list') }}">{{ $lang->ssh_all_items }}</a>
@@ -309,7 +339,6 @@ if (!function_exists('hr_home_posts'))
 	</a>
 	@endif
 
-	{{-- 에디토리얼: 사진 한 칸, 글 한 칸. 슬라이드 재료를 그대로 쓴다 --}}
 	@if ($hrh_stype === 'editorial' && count($hrh_banners))
 	@php
 	$hrh_eidx = (int)$hrh_sec['source'];
@@ -352,7 +381,7 @@ if (!function_exists('hr_home_posts'))
 	@if ($hrh_deal)
 	@php
 	$hrh_dp = (int)$hrh_deal->price;
-	$hrh_ds = (int)$hrh_deal->sale_price;
+	$hrh_ds = hr_home_now($hrh_deal);
 	$hrh_doff = (int)round(($hrh_dp - $hrh_ds) / $hrh_dp * 100);
 	@endphp
 	<section class="ssh-daily">
@@ -367,10 +396,10 @@ if (!function_exists('hr_home_posts'))
 			<span class="ssh-daily-body">
 				<span class="ssh-card-name">{{ $hrh_deal->item_name }}</span>
 				<span class="ssh-card-price">
-					<em class="ssh-off">{{ $hrh_doff }}%</em>
+					<s class="ssh-card-was">{{ hr_home_price($hrh_dp) }}</s>
 					<strong>{{ hr_home_price($hrh_ds) }}</strong>
+					<em class="ssh-off">{{ $hrh_doff }}%</em>
 				</span>
-				<s class="ssh-card-was">{{ hr_home_price($hrh_dp) }}</s>
 			</span>
 		</a>
 	</section>
@@ -460,11 +489,10 @@ if (!function_exists('hr_home_posts'))
 			<a class="ssh-section-more" href="{{ $hrh_rank_more }}">{{ $lang->ssh_view_all }}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7-1.4-1.4L13.2 12 7.6 6.4z"/></svg></a>
 			@endif
 		</div>
-		{{-- 1위는 크게 한 칸, 나머지는 옆에 세로 목록으로 세운다 --}}
 		<div class="ssh-rank">
 			@php
 			$hrh_tp = (int)($hrh_rank_top->price ?? 0);
-			$hrh_ts = (int)($hrh_rank_top->sale_price ?? 0);
+			$hrh_ts = hr_home_now($hrh_rank_top);
 			$hrh_t_on = $hrh_ts > 0 && $hrh_ts < $hrh_tp;
 			$hrh_t_off = ($hrh_t_on && $hrh_tp > 0) ? (int)round(($hrh_tp - $hrh_ts) / $hrh_tp * 100) : 0;
 			@endphp
@@ -476,17 +504,16 @@ if (!function_exists('hr_home_posts'))
 					@if (!empty($hrh_rank_top->summary))<span class="ssh-card-brand">{{ $hrh_rank_top->summary }}</span>@endif
 					<span class="ssh-rank-hero-name">{{ $hrh_rank_top->item_name }}</span>
 					<span class="ssh-card-price">
-						@if ($hrh_t_on)<em class="ssh-off">{{ $hrh_t_off }}%</em><strong>{{ hr_home_price($hrh_ts) }}</strong>
+						@if ($hrh_t_on)<s class="ssh-card-was">{{ hr_home_price($hrh_tp) }}</s><strong>{{ hr_home_price($hrh_ts) }}</strong><em class="ssh-off">{{ $hrh_t_off }}%</em>
 						@else<strong>{{ hr_home_price($hrh_tp) }}</strong>@endif
 					</span>
-					@if ($hrh_t_on)<s class="ssh-card-was">{{ hr_home_price($hrh_tp) }}</s>@endif
 				</span>
 			</a>
 			<ol class="ssh-rank-list">
 				@foreach ($hrh_rank_rest as $hrh_ri => $hrh_it)
 				@php
 				$hrh_price = (int)($hrh_it->price ?? 0);
-				$hrh_sale = (int)($hrh_it->sale_price ?? 0);
+				$hrh_sale = hr_home_now($hrh_it);
 				$hrh_on_sale = $hrh_sale > 0 && $hrh_sale < $hrh_price;
 				$hrh_off = ($hrh_on_sale && $hrh_price > 0) ? (int)round(($hrh_price - $hrh_sale) / $hrh_price * 100) : 0;
 				@endphp
@@ -498,7 +525,7 @@ if (!function_exists('hr_home_posts'))
 							@if (!empty($hrh_it->summary))<span class="ssh-card-brand">{{ $hrh_it->summary }}</span>@endif
 							<span class="ssh-card-name">{{ $hrh_it->item_name }}</span>
 							<span class="ssh-card-price">
-								@if ($hrh_on_sale)<em class="ssh-off">{{ $hrh_off }}%</em><strong>{{ hr_home_price($hrh_sale) }}</strong>
+								@if ($hrh_on_sale)<strong>{{ hr_home_price($hrh_sale) }}</strong><em class="ssh-off">{{ $hrh_off }}%</em>
 								@else<strong>{{ hr_home_price($hrh_price) }}</strong>@endif
 							</span>
 						</span>
@@ -523,7 +550,7 @@ if (!function_exists('hr_home_posts'))
 			@foreach ($hrh_items as $hrh_it)
 			@php
 			$hrh_price = (int)($hrh_it->price ?? 0);
-			$hrh_sale = (int)($hrh_it->sale_price ?? 0);
+			$hrh_sale = hr_home_now($hrh_it);
 			$hrh_on_sale = $hrh_sale > 0 && $hrh_sale < $hrh_price;
 			$hrh_off = ($hrh_on_sale && $hrh_price > 0) ? (int)round(($hrh_price - $hrh_sale) / $hrh_price * 100) : 0;
 			@endphp
@@ -540,20 +567,19 @@ if (!function_exists('hr_home_posts'))
 					{{ $lang->ssh_add_cart }}
 				</span>
 				<span class="ssh-card-body">
-					{{-- 뷰티 편집숍 카드의 윗줄. 상품 한 줄 소개를 브랜드명 자리처럼 쓴다 --}}
 					@if (!empty($hrh_it->summary))
 					<span class="ssh-card-brand">{{ $hrh_it->summary }}</span>
 					@endif
 					<span class="ssh-card-name">{{ $hrh_it->item_name }}</span>
 					<span class="ssh-card-price">
 						@if ($hrh_on_sale)
-						<em class="ssh-off">{{ $hrh_off }}%</em>
+						<s class="ssh-card-was">{{ hr_home_price($hrh_price) }}</s>
 						<strong>{{ hr_home_price($hrh_sale) }}</strong>
+						<em class="ssh-off">{{ $hrh_off }}%</em>
 						@else
 						<strong>{{ hr_home_price($hrh_price) }}</strong>
 						@endif
 					</span>
-					@if ($hrh_on_sale)<s class="ssh-card-was">{{ hr_home_price($hrh_price) }}</s>@endif
 				</span>
 			</a>
 			@endforeach

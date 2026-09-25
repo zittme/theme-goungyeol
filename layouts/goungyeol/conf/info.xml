@@ -5,8 +5,8 @@
 	<title xml:lang="en">Goungyeol</title>
 	<description xml:lang="ko">화장품·뷰티 쇼핑몰을 위한 레이아웃입니다. 상단 2뎁스 메뉴와 비주얼 슬라이더 위에 뷰티 편집숍 방식의 흰 여백과 각진 카드를 얹었습니다. 페이지 유형은 사이트맵의 메뉴 클래스에 m(메인) / sl(서브 LNB) / sf(전체 폭)를 입력해 지정합니다. 회원·쪽지·결제 화면은 자동으로 전체 폭이 됩니다.</description>
 	<description xml:lang="en">A layout for cosmetics and beauty shops: two-depth GNB and visual slider under the wide white space and square cards of a beauty retailer. Set the page type by entering m (main) / sl (sub LNB) / sf (full width) in the menu class field of the sitemap. Member, message and payment screens switch to full width automatically.</description>
-	<version>1.0.2</version>
-	<date>2026-09-08</date>
+	<version>1.1.0</version>
+	<date>2026-09-26</date>
 	<author email_address="zittme-contact@zzan.me" link="https://zitt.me">
 		<name xml:lang="ko">ZZAN Studio</name>
 		<name xml:lang="en">ZZAN Studio</name>

@@ -31,7 +31,6 @@
 	--hr-btn-strong: var(--hr-ink);
 	--hr-btn-strong-hover: var(--hr-brand);
 
-	/* 상품 사진이 주인공인 편집숍 화면이다. 카드·버튼·입력칸·배지 어디에도 둥근 모서리를 두지 않는다 */
 	--hr-radius: 0;
 	--hr-radius-sm: 0;
 	--hr-radius-btn: 0;
