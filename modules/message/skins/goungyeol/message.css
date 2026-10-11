@@ -58,7 +58,7 @@ body { background: var(--zm-surface); }
 #access .control-group.captcha { margin-bottom: 10px; }
 #access .message { padding: 12px 14px; margin: 0 0 14px; border: 1px solid var(--zm-border); border-radius: 0; background: var(--zm-surface); color: var(--zm-text); line-height: 1.6; }
 #access .message.error { border-color: rgba(226, 58, 71, .35); background: rgba(226, 58, 71, .06); color: #a34715; }
-#access .message.info { border-color: rgba(196, 39, 95, .35); background: var(--zm-brand-soft); color: var(--zm-brand); }
+#access .message.info { border-color: rgba(196, 39, 95, .35); background: var(--zm-brand-soft); color: var(--hr-brand-text, var(--zm-brand)); }
 #access .message.location { word-break: break-all; }
 
 #access form { margin: 0; }
@@ -102,13 +102,13 @@ body { background: var(--zm-surface); }
 	cursor: pointer;
 	transition: border-color .15s, color .15s, background-color .15s;
 }
-#access .btn:hover { border-color: var(--zm-brand); color: var(--zm-brand); }
+#access .btn:hover { border-color: var(--zm-brand); color: var(--hr-brand-text, var(--zm-brand)); }
 #access .btn.btn-inverse,
 #access input[type="submit"].btn,
 #access .submit {
 	background: var(--zm-brand);
 	border-color: var(--zm-brand);
-	color: #fff;
+	color: var(--hr-on-brand, #fff);
 	font-weight: 700;
 }
 #access .btn.btn-inverse:hover,
@@ -118,7 +118,7 @@ body { background: var(--zm-surface); }
 
 #access p { margin: 10px 0; line-height: 1.65; }
 #access #warning { margin-right: 0; font-size: 12.5px; color: var(--zm-text-sub); }
-#access a { color: var(--zm-brand); text-decoration: none; font-weight: 600; }
+#access a { color: var(--hr-brand-text, var(--zm-brand)); text-decoration: none; font-weight: 600; }
 #access a:hover { text-decoration: underline; text-underline-offset: 2px; }
 
 @media all and (max-width: 480px) {

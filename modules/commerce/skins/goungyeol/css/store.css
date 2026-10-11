@@ -1,6 +1,12 @@
 .shp-store { --st-accent: var(--st-color, #c4275f); --shp-brand: var(--st-accent); --shp-brand-soft: color-mix(in srgb, var(--st-accent) 10%, transparent); }
+
+.shp-store, .st-frame-item .shp { --shp-on-brand: var(--hr-on-brand, #fff); --shp-on-brand-dark: var(--hr-on-brand-dark, #fff); --shp-brand-text: var(--hr-brand-text, var(--shp-brand)); }
+@supports (color: color(from red srgb-linear r g b)) {
+	.shp-store, .st-frame-item .shp { --shp-on-brand: color(from var(--shp-brand) srgb-linear clamp(.004, (.179 - (.2126 * r + .7152 * g + .0722 * b)) * 100000, 1) clamp(.004, (.179 - (.2126 * r + .7152 * g + .0722 * b)) * 100000, 1) clamp(.004, (.179 - (.2126 * r + .7152 * g + .0722 * b)) * 100000, 1)); --shp-on-brand-dark: color(from var(--shp-brand-dark) srgb-linear clamp(.004, (.179 - (.2126 * r + .7152 * g + .0722 * b)) * 100000, 1) clamp(.004, (.179 - (.2126 * r + .7152 * g + .0722 * b)) * 100000, 1) clamp(.004, (.179 - (.2126 * r + .7152 * g + .0722 * b)) * 100000, 1)); --shp-brand-text: oklch(from var(--shp-brand) clamp(var(--hr-tl-min, 0), l, var(--hr-tl-max, .48)) c h); }
+}
+
 .st-preview-note { margin: 0 0 12px; padding: 10px 14px; border-radius: 0; background: color-mix(in srgb, #f0a020 14%, var(--shp-card)); color: var(--shp-text); font-size: 13px; }
-.st-head { position: relative; margin-bottom: 16px; border-radius: 0; overflow: hidden; background: var(--st-accent); color: #fff; }
+.st-head { position: relative; margin-bottom: 16px; border-radius: 0; overflow: hidden; background: var(--st-accent); color: var(--hr-on-brand, #fff); }
 .st-head-banner { min-height: 220px; display: flex; align-items: flex-end; background-size: cover; background-position: center; }
 .st-head-banner.has-cover::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(0,0,0,.58)); }
 .st-head-simple { background: var(--shp-card); color: var(--shp-text); border: 1px solid var(--shp-border); border-top: 4px solid var(--st-accent); }
@@ -19,7 +25,7 @@
 .st-nav-links a.is-on { background: var(--shp-brand-soft); }
 .st-search { display: flex; gap: 6px; }
 .st-search input { padding: 8px 12px; border: 1px solid var(--shp-border); border-radius: 0; background: var(--shp-card); color: var(--shp-text); font-size: 14px; font-family: inherit; min-width: 180px; }
-.st-search button { padding: 8px 14px; border: 0; border-radius: 0; background: var(--st-accent); color: #fff; font-weight: 700; font-family: inherit; cursor: pointer; }
+.st-search button { padding: 8px 14px; border: 0; border-radius: 0; background: var(--st-accent); color: var(--hr-on-brand, #fff); font-weight: 700; font-family: inherit; cursor: pointer; }
 .st-banner { position: relative; aspect-ratio: 16 / 5; border-radius: 0; overflow: hidden; margin-bottom: 24px; background: var(--shp-bg); }
 .st-banner-item { position: absolute; inset: 0; background: center / cover no-repeat; opacity: 0; transition: opacity .6s; }
 .st-banner-item.is-on { opacity: 1; }
